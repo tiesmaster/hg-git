@@ -348,6 +348,15 @@ class GitHandler(object):
             if len(a.group(3)) > 0:
                 name += ' ext:(' + urllib.quote(a.group(3)) + ')'
             author = name + ' <' + email + '>'
+        elif '<' in author:
+	    # add authors with a missing closing bracket
+            regex = re.compile('^(.*?) \<(.*)$')
+            a = regex.match(author)
+
+            if a:
+                name = a.group(1)
+                email = a.group(2)
+                author = name + ' <' + email + '>'
         elif '@' in author:
             author = author + ' <' + author + '>'
         else:
